@@ -13,6 +13,16 @@ const tasks = [
   { id: 4, owner: 4, text: "Dust out the living room" }
 ];
 
+function populateTaskOwners() {
+  people.map((person) => {
+    var option = document.createElement("option");
+    option.value = person.id;
+    option.text = person.name;
+    return document.getElementById("todoOwners").appendChild(option);
+  });
+}
+
+populateTaskOwners();
 /*
    1 Please write a function to init the app:
     - Populate 'TODO Owners" select element with people info
