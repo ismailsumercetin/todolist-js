@@ -16,18 +16,20 @@ const tasks = [
 
 const SELECTED_ID = 3;
 
+var ulElement = document.getElementById("todoList");
+var todoOwners = document.getElementById("todoOwners");
+
 function populateTaskOwners() {
   people.map((person) => {
     var option = document.createElement("option");
     option.value = person.id;
     option.text = person.name;
-    return document.getElementById("todoOwners").appendChild(option);
+    return todoOwners.appendChild(option);
   });
 }
 
 function makeAnOwnerSelectedById(ownerId) {
-  var ownerListElement = document.getElementById("todoOwners");
-  ownerListElement.value = ownerId;
+  todoOwners.value = ownerId;
 }
 
 function displaySelectedNameAtFirst(ownerId) {
@@ -35,33 +37,35 @@ function displaySelectedNameAtFirst(ownerId) {
   titleElement.innerHTML = people.find((person) => person.id === ownerId).name;
 }
 
-//handling dynamic title
-document.getElementById("todoOwners").onchange = function (e) {
-  document.getElementById("todoOwnerName").innerHTML = this.options[
-    this.selectedIndex
-  ].text;
-};
-
-//handling dynamic tasks
-document.getElementById("todoOwners").onchange = function (e) {
+function populateTask() {
   //get selected option, and filter tasks
-  var ownerId = this.options[this.selectedIndex].value;
+  var ownerId = todoOwners.options[todoOwners.selectedIndex].value;
   var tasksOfOwner = tasks.filter((task) => task.owner === parseInt(ownerId));
-
-  //remove all tasks on DOM
-  var ulElement = document.getElementById("todoList");
-  while (ulElement.firstChild) ulElement.removeChild(ulElement.firstChild);
 
   tasksOfOwner.map((task) => {
     var listElement = document.createElement("li");
     listElement.innerHTML = task.text;
     return ulElement.appendChild(listElement);
   });
+}
+
+//handling dynamic title
+todoOwners.onchange = function (e) {
+  document.getElementById("todoOwnerName").innerHTML = this.options[
+    this.selectedIndex
+  ].text;
+};
+
+//handling dynamic tasks
+todoOwners.onchange = function (e) {
+  while (ulElement.firstChild) ulElement.removeChild(ulElement.firstChild);
+  populateTask();
 };
 
 populateTaskOwners();
 makeAnOwnerSelectedById(SELECTED_ID);
 displaySelectedNameAtFirst(SELECTED_ID);
+populateTask();
 
 /*
    1 Please write a function to init the app:
