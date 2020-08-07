@@ -20,6 +20,7 @@ var ulElement = document.getElementById("todoList");
 var todoOwners = document.getElementById("todoOwners");
 var addTop = document.getElementById("addToTop");
 var addBottom = document.getElementById("addToBottom");
+var titleElement = document.getElementById("todoOwnerName");
 
 function populateTaskOwners() {
   people.map((person) => {
@@ -35,7 +36,6 @@ function makeAnOwnerSelectedById(ownerId) {
 }
 
 function displaySelectedNameAtFirst(ownerId) {
-  var titleElement = document.getElementById("todoOwnerName");
   titleElement.innerHTML = people.find((person) => person.id === ownerId).name;
 }
 
@@ -53,15 +53,14 @@ function populateTask() {
 
 //handling dynamic title
 todoOwners.onchange = function () {
-  document.getElementById("todoOwnerName").innerHTML = this.options[
-    this.selectedIndex
-  ].text;
+  titleElement.innerHTML = this.options[this.selectedIndex].text;
 };
 
 //handling dynamic tasks
 todoOwners.onchange = function () {
   //remove tasks
   while (ulElement.firstChild) ulElement.removeChild(ulElement.firstChild);
+
   populateTask();
 };
 
@@ -79,6 +78,7 @@ addBottom.onclick = function (e) {
   e.preventDefault();
   var listElement = document.createElement("li");
   listElement.innerHTML = document.getElementById("newTask").value;
+
   if (listElement.innerHTML.length !== 0) ulElement.appendChild(listElement);
 };
 
