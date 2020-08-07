@@ -10,7 +10,8 @@ const tasks = [
   { id: 1, owner: 1, text: "Take out the trash" },
   { id: 2, owner: 2, text: "Walk the dog" },
   { id: 3, owner: 3, text: "Wash the dishes" },
-  { id: 4, owner: 4, text: "Dust out the living room" }
+  { id: 4, owner: 4, text: "Dust out the living room" },
+  { id: 5, owner: 1, text: "Clean the house" }
 ];
 
 const SELECTED_ID = 3;
@@ -31,13 +32,31 @@ function makeAnOwnerSelectedById(ownerId) {
 
 function displaySelectedNameAtFirst(ownerId) {
   var titleElement = document.getElementById("todoOwnerName");
-  titleElement.innerHTML = people.find((x) => x.id === ownerId).name;
+  titleElement.innerHTML = people.find((person) => person.id === ownerId).name;
 }
 
+//handling dynamic title
 document.getElementById("todoOwners").onchange = function (e) {
   document.getElementById("todoOwnerName").innerHTML = this.options[
     this.selectedIndex
   ].text;
+};
+
+//handling dynamic tasks
+document.getElementById("todoOwners").onchange = function (e) {
+  //get selected option, and filter tasks
+  var ownerId = this.options[this.selectedIndex].value;
+  var tasksOfOwner = tasks.filter((task) => task.owner === parseInt(ownerId));
+
+  //remove all tasks on DOM
+  var ulElement = document.getElementById("todoList");
+  while (ulElement.firstChild) ulElement.removeChild(ulElement.firstChild);
+
+  tasksOfOwner.map((task) => {
+    var listElement = document.createElement("li");
+    listElement.innerHTML = task.text;
+    return ulElement.appendChild(listElement);
+  });
 };
 
 populateTaskOwners();
