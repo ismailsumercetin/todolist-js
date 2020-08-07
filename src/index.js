@@ -13,6 +13,8 @@ const tasks = [
   { id: 4, owner: 4, text: "Dust out the living room" }
 ];
 
+const SELECTED_ID = 3;
+
 function populateTaskOwners() {
   people.map((person) => {
     var option = document.createElement("option");
@@ -22,13 +24,25 @@ function populateTaskOwners() {
   });
 }
 
-function makeAnOwnerSelectedById(id) {
+function makeAnOwnerSelectedById(ownerId) {
   var ownerListElement = document.getElementById("todoOwners");
-  ownerListElement.value = id;
+  ownerListElement.value = ownerId;
 }
 
+function displaySelectedNameAtFirst(ownerId) {
+  var titleElement = document.getElementById("todoOwnerName");
+  titleElement.innerHTML = people.find((x) => x.id === ownerId).name;
+}
+
+document.getElementById("todoOwners").onchange = function (e) {
+  document.getElementById("todoOwnerName").innerHTML = this.options[
+    this.selectedIndex
+  ].text;
+};
+
 populateTaskOwners();
-makeAnOwnerSelectedById(3);
+makeAnOwnerSelectedById(SELECTED_ID);
+displaySelectedNameAtFirst(SELECTED_ID);
 
 /*
    1 Please write a function to init the app:
