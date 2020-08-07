@@ -18,6 +18,8 @@ const SELECTED_ID = 3;
 
 var ulElement = document.getElementById("todoList");
 var todoOwners = document.getElementById("todoOwners");
+var addTop = document.getElementById("addToTop");
+var addBottom = document.getElementById("addToBottom");
 
 function populateTaskOwners() {
   people.map((person) => {
@@ -50,16 +52,34 @@ function populateTask() {
 }
 
 //handling dynamic title
-todoOwners.onchange = function (e) {
+todoOwners.onchange = function () {
   document.getElementById("todoOwnerName").innerHTML = this.options[
     this.selectedIndex
   ].text;
 };
 
 //handling dynamic tasks
-todoOwners.onchange = function (e) {
+todoOwners.onchange = function () {
+  //remove tasks
   while (ulElement.firstChild) ulElement.removeChild(ulElement.firstChild);
   populateTask();
+};
+
+addTop.onclick = function (e) {
+  e.preventDefault();
+  var listElement = document.createElement("li");
+  listElement.innerHTML = document.getElementById("newTask").value;
+  //var textnode = document.createTextNode("Water");
+  //ulElement.appendChild(textnode);
+  if (listElement.innerHTML.length !== 0)
+    ulElement.insertBefore(listElement, ulElement.childNodes[0]);
+};
+
+addBottom.onclick = function (e) {
+  e.preventDefault();
+  var listElement = document.createElement("li");
+  listElement.innerHTML = document.getElementById("newTask").value;
+  if (listElement.innerHTML.length !== 0) ulElement.appendChild(listElement);
 };
 
 populateTaskOwners();
