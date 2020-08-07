@@ -22,7 +22,14 @@ function populateTaskOwners() {
   });
 }
 
+function makeAnOwnerSelectedById(id) {
+  var ownerListElement = document.getElementById("todoOwners");
+  ownerListElement.value = id;
+}
+
 populateTaskOwners();
+makeAnOwnerSelectedById(3);
+
 /*
    1 Please write a function to init the app:
     - Populate 'TODO Owners" select element with people info
