@@ -69,20 +69,20 @@ const addNewTask = function (place) {
   var listElement = document.createElement("li");
   listElement.textContent = newTaskText;
 
-  if (place === "top") {
-    //add to array
-    tasks.unshift(newTask);
+  if (listElement.textContent.length !== 0) {
+    if (place === "top") {
+      //add to array
+      tasks.unshift(newTask);
 
-    //add to dom
-    if (listElement.textContent.length !== 0)
+      //add to dom
       ulElement.insertBefore(listElement, ulElement.childNodes[0]);
-  } else if (place === "bottom") {
-    //add to array
-    tasks.push(newTask);
+    } else if (place === "bottom") {
+      //add to array
+      tasks.push(newTask);
 
-    //add to dom
-    if (listElement.textContent.length !== 0)
+      //add to dom
       ulElement.appendChild(listElement);
+    }
   }
 };
 
