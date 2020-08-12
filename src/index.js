@@ -21,8 +21,10 @@ var todoOwnersSelectElement = document.getElementById("todoOwners");
 var addTop = document.getElementById("addToTop");
 var addBottom = document.getElementById("addToBottom");
 var titleElement = document.getElementById("todoOwnerName");
+var newTaskTextbox = document.getElementById("newTask");
 
 const setSelectedOwnerName = function () {
+  console.log();
   titleElement.textContent =
     todoOwnersSelectElement.options[todoOwnersSelectElement.selectedIndex].text;
 };
@@ -54,6 +56,36 @@ const populateTask = function () {
   });
 };
 
+const addNewTask = function (place) {
+  var newTaskText = newTaskTextbox.value;
+
+  //create object
+  var newTask = {};
+  newTask.id = ++tasks[tasks.length - 1].id;
+  newTask.owner = Number(todoOwnersSelectElement.value);
+  newTask.text = newTaskText;
+
+  //create dom element
+  var listElement = document.createElement("li");
+  listElement.textContent = newTaskText;
+
+  if (place === "top") {
+    //add to array
+    tasks.unshift(newTask);
+
+    //add to dom
+    if (listElement.textContent.length !== 0)
+      ulElement.insertBefore(listElement, ulElement.childNodes[0]);
+  } else if (place === "bottom") {
+    //add to array
+    tasks.push(newTask);
+
+    //add to dom
+    if (listElement.textContent.length !== 0)
+      ulElement.appendChild(listElement);
+  }
+};
+
 //handling dynamic title
 todoOwnersSelectElement.addEventListener("change", (e) => {
   setSelectedOwnerName();
@@ -68,32 +100,13 @@ todoOwnersSelectElement.addEventListener("change", (e) => {
 
 addTop.addEventListener("click", (e) => {
   e.preventDefault();
-  var listElement = document.createElement("li");
-  listElement.textContent = document.getElementById("newTask").value;
-
-  if (listElement.textContent.length !== 0)
-    ulElement.insertBefore(listElement, ulElement.childNodes[0]);
+  addNewTask("top");
 });
 
 addBottom.addEventListener("click", (e) => {
   e.preventDefault();
-
-  var listElement = document.createElement("li");
-  listElement.textContent = document.getElementById("newTask").value;
-
-  if (listElement.textContent.length !== 0) ulElement.appendChild(listElement);
+  addNewTask("bottom");
 });
 
 populateTaskOwners();
 populateTask();
-
-/*
-   1 Please write a function to init the app:
-    - Populate 'TODO Owners" select element with people info
-    - Make the second owner selected (Julia)
-    - Display selected owner's name at the title
-    - Show selected owner's task in the list
-   
-    3 Make "To Top" and "To Bottom" works, without touching the markup
-    4 Implement a mechanism to make tasks can be completable and deletable
-*/
