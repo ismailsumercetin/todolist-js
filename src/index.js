@@ -14,77 +14,77 @@ const tasks = [
   { id: 5, owner: 1, text: "Clean the house" }
 ];
 
-const SELECTED_ID = 3;
+const selectedIndex = 1;
 
 var ulElement = document.getElementById("todoList");
-var todoOwners = document.getElementById("todoOwners");
+var todoOwnersSelectElement = document.getElementById("todoOwners");
 var addTop = document.getElementById("addToTop");
 var addBottom = document.getElementById("addToBottom");
 var titleElement = document.getElementById("todoOwnerName");
 
-function populateTaskOwners() {
-  people.map((person) => {
+const setSelectedOwnerName = function () {
+  titleElement.textContent =
+    todoOwnersSelectElement.options[todoOwnersSelectElement.selectedIndex].text;
+};
+
+const populateTaskOwners = function () {
+  people.forEach((person, index) => {
     var option = document.createElement("option");
     option.value = person.id;
     option.text = person.name;
-    return todoOwners.appendChild(option);
+    if (index === selectedIndex) {
+      option.selected = true;
+    }
+    todoOwnersSelectElement.appendChild(option);
   });
-}
+  setSelectedOwnerName();
+};
 
-function makeAnOwnerSelectedById(ownerId) {
-  todoOwners.value = ownerId;
-}
-
-function displaySelectedNameAtFirst(ownerId) {
-  titleElement.innerHTML = people.find((person) => person.id === ownerId).name;
-}
-
-function populateTask() {
+const populateTask = function () {
   //get selected option, and filter tasks
-  var ownerId = todoOwners.options[todoOwners.selectedIndex].value;
-  var tasksOfOwner = tasks.filter((task) => task.owner === parseInt(ownerId));
+  var ownerId =
+    todoOwnersSelectElement.options[todoOwnersSelectElement.selectedIndex]
+      .value;
+  var tasksOfOwner = tasks.filter((task) => task.owner === Number(ownerId));
 
   tasksOfOwner.map((task) => {
     var listElement = document.createElement("li");
-    listElement.innerHTML = task.text;
+    listElement.textContent = task.text;
     return ulElement.appendChild(listElement);
   });
-}
+};
 
 //handling dynamic title
-todoOwners.onchange = function () {
-  titleElement.innerHTML = this.options[this.selectedIndex].text;
-};
+todoOwnersSelectElement.addEventListener("change", (e) => {
+  setSelectedOwnerName();
+});
 
 //handling dynamic tasks
-todoOwners.onchange = function () {
+todoOwnersSelectElement.addEventListener("change", (e) => {
   //remove tasks
-  while (ulElement.firstChild) ulElement.removeChild(ulElement.firstChild);
-
+  ulElement.innerHTML = "";
   populateTask();
-};
+});
 
-addTop.onclick = function (e) {
+addTop.addEventListener("click", (e) => {
   e.preventDefault();
   var listElement = document.createElement("li");
-  listElement.innerHTML = document.getElementById("newTask").value;
-  //var textnode = document.createTextNode("Water");
-  //ulElement.appendChild(textnode);
-  if (listElement.innerHTML.length !== 0)
+  listElement.textContent = document.getElementById("newTask").value;
+
+  if (listElement.textContent.length !== 0)
     ulElement.insertBefore(listElement, ulElement.childNodes[0]);
-};
+});
 
-addBottom.onclick = function (e) {
+addBottom.addEventListener("click", (e) => {
   e.preventDefault();
-  var listElement = document.createElement("li");
-  listElement.innerHTML = document.getElementById("newTask").value;
 
-  if (listElement.innerHTML.length !== 0) ulElement.appendChild(listElement);
-};
+  var listElement = document.createElement("li");
+  listElement.textContent = document.getElementById("newTask").value;
+
+  if (listElement.textContent.length !== 0) ulElement.appendChild(listElement);
+});
 
 populateTaskOwners();
-makeAnOwnerSelectedById(SELECTED_ID);
-displaySelectedNameAtFirst(SELECTED_ID);
 populateTask();
 
 /*
