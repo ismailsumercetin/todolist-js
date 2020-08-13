@@ -60,13 +60,17 @@ const populateTask = function () {
 
 const addNewTask = function (place) {
   var newTaskText = newTaskTextbox.value;
-  var newTaskId = ++tasks[tasks.length - 1].id;
+  var lastTaskId = 0;
+
+  if (tasks.length !== 0) lastTaskId = tasks[tasks.length - 1].id;
+
+  var newTaskId = ++lastTaskId;
 
   //create object
   var newTask = {};
   newTask.id = newTaskId;
-  newTask.text = newTaskText;
   newTask.owner = Number(todoOwnersSelectElement.value);
+  newTask.text = newTaskText;
 
   //create dom element (burası problemli)
   var listElement = document.createElement("li");
@@ -100,6 +104,12 @@ const remove = function () {
   console.log(tasks.splice(taskDeleted.id, 1))
   console.log(tasks)
   */
+  var taskDeleted = tasks.find((task) => {
+    return task.id === Number(this.getAttribute("taskId"));
+  });
+  var deletedIndex = tasks.indexOf(taskDeleted);
+  tasks.splice(deletedIndex, 1);
+
   //from dom
   this.remove();
 };
