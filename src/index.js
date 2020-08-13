@@ -10,151 +10,160 @@ const tasks = [
   { id: 1, owner: 1, text: "Take out the trash" },
   { id: 2, owner: 2, text: "Walk the dog" },
   { id: 3, owner: 3, text: "Wash the dishes" },
-  { id: 4, owner: 4, text: "Dust out the living room" },
-  { id: 5, owner: 1, text: "Clean the house" }
+  { id: 4, owner: 4, text: "Dust out the living room" }
 ];
 
-const selectedIndex = 5;
+const selectedIndex = 1;
 
-var ulElement = document.getElementById("todoList");
-var todoOwnersSelectElement = document.getElementById("todoOwners");
-var addTop = document.getElementById("addToTop");
-var addBottom = document.getElementById("addToBottom");
-var titleElement = document.getElementById("todoOwnerName");
-var newTaskTextbox = document.getElementById("newTask");
-var liElements;
+//DOM elements
+const ulElement = document.getElementById("todoList");
+const todoOwnersSelectElement = document.getElementById("todoOwners");
+const addTop = document.getElementById("addToTop");
+const addBottom = document.getElementById("addToBottom");
+const titleElement = document.getElementById("todoOwnerName");
+const newTaskTextbox = document.getElementById("newTask");
+let liElements;
+/*---------------------------------------------------------------*/
 
-const setSelectedOwnerName = function () {
+//render title
+const setSelectedOwnerName = () => {
   titleElement.textContent =
     todoOwnersSelectElement.options[todoOwnersSelectElement.selectedIndex].text;
 };
 
-const populateTaskOwners = function () {
-  people.forEach((person, index) => {
-    var option = document.createElement("option");
+const populateTaskOwners = () => {
+  let ownerData = JSON.parse(sessionStorage.getItem("owner"));
+
+  ownerData.forEach((person, index) => {
+    let option = document.createElement("option");
     option.value = person.id;
     option.text = person.name;
     if (index === selectedIndex) {
+      //set selected owner
       option.selected = true;
     }
+    //append owners
     todoOwnersSelectElement.appendChild(option);
   });
+
+  //render title
   setSelectedOwnerName();
 };
 
-const populateTask = function () {
+const populateTask = () => {
+  //clear task lisk
+  ulElement.innerHTML = "";
+
   //get selected option, and filter tasks
-  var ownerId =
+  let ownerId =
     todoOwnersSelectElement.options[todoOwnersSelectElement.selectedIndex]
       .value;
-  var tasksOfOwner = tasks.filter((task) => task.owner === Number(ownerId));
+  //get owner data form sessionStorage
+  let taskData = JSON.parse(sessionStorage.getItem("tasks"));
+  //filter tasks by owner id
+  let tasksOfOwner = taskData.filter((task) => task.owner === Number(ownerId));
 
-  tasksOfOwner.map((task) => {
-    var listElement = document.createElement("li");
+  //create list elements and render tasks to DOM
+  tasksOfOwner.forEach((task) => {
+    let listElement = document.createElement("li");
     listElement.textContent = task.text;
     listElement.setAttribute("taskId", task.id);
-    return ulElement.appendChild(listElement);
+    ulElement.appendChild(listElement);
   });
+  //get li elements for removal
   liElements = document.getElementsByTagName("li");
 };
 
-const addNewTask = function (place) {
-  var newTaskText = newTaskTextbox.value;
-  var lastTaskId = 0;
+const addNewTask = (place) => {
+  let newTaskText = newTaskTextbox.value;
 
-  if (tasks.length !== 0) lastTaskId = tasks[tasks.length - 1].id;
+  //if task input is empty, return null
+  if (!newTaskText) return null;
 
-  var newTaskId = ++lastTaskId;
+  //get tasks from sessionStorage
+  let storedTasks = JSON.parse(sessionStorage.getItem("tasks"));
+
+  let maxTaskId = 0;
+
+  if (storedTasks.length !== 0)
+    maxTaskId = Math.max(...storedTasks.map((task) => task.id));
+
+  let newTaskId = ++maxTaskId;
 
   //create object
-  var newTask = {};
+  let newTask = {};
   newTask.id = newTaskId;
   newTask.owner = Number(todoOwnersSelectElement.value);
   newTask.text = newTaskText;
 
-  //create dom element (burası problemli)
-  var listElement = document.createElement("li");
-  listElement.textContent = newTaskText;
-  listElement.setAttribute("taskId", newTaskId);
-
-  if (listElement.textContent.length !== 0) {
-    if (place === "top") {
-      //add to array
-      tasks.unshift(newTask);
-
-      //add to dom
-      ulElement.insertBefore(listElement, ulElement.childNodes[0]);
-    } else if (place === "bottom") {
-      //add to array
-      tasks.push(newTask);
-
-      //add to dom
-      ulElement.appendChild(listElement);
-    }
+  if (place === "top") {
+    //add to the beginning of the array
+    storedTasks.unshift(newTask);
+  } else if (place === "bottom") {
+    //add to the end of the array
+    storedTasks.push(newTask);
   }
+
+  //update tasks item in sessionStorage
+  sessionStorage.setItem("tasks", JSON.stringify(storedTasks));
 };
 
 const remove = function () {
-  //from array
-  /* is there any way
-  var taskDeleted = tasks.find((task) => {
+  let taskData = JSON.parse(sessionStorage.getItem("tasks"));
+  //find task index and delete
+  var taskDeleted = taskData.findIndex((task) => {
     return task.id === Number(this.getAttribute("taskId"));
   });
-  console.log(taskDeleted)
-  console.log(tasks.splice(taskDeleted.id, 1))
-  console.log(tasks)
-  */
-  var taskDeleted = tasks.find((task) => {
-    return task.id === Number(this.getAttribute("taskId"));
-  });
-  var deletedIndex = tasks.indexOf(taskDeleted);
-  tasks.splice(deletedIndex, 1);
 
-  //from dom
-  this.remove();
+  taskData.splice(taskDeleted, 1);
+
+  sessionStorage.setItem("tasks", JSON.stringify(taskData));
+  //render tasks and make them removable
+  render();
 };
+
 //make all tasks removable
-const makeTasksRemovable = function () {
+const makeTasksRemovable = () => {
+  //HTMLCollection to array
   [...liElements].forEach((liElement) => {
-    liElement.addEventListener("click", remove, false);
+    liElement.addEventListener("click", remove);
   });
-  /*
-  for (let i = 0; i < liElements.length; i++) {
-    liElements[i].addEventListener("click", remove, false);
-  }
-  */
 };
 
-//make single task removable (new added tasks)
-const makeATaskRemovable = function (addedTask) {
-  addedTask.addEventListener("click", remove, false);
-};
-
-//handling dynamic title
-todoOwnersSelectElement.addEventListener("change", (e) => {
+todoOwnersSelectElement.addEventListener("change", () => {
+  //render title
   setSelectedOwnerName();
-});
-
-//handling dynamic tasks
-todoOwnersSelectElement.addEventListener("change", (e) => {
-  //remove tasks
-  ulElement.innerHTML = "";
-  populateTask();
-  makeTasksRemovable();
+  //clear task list, render tasks and make all tasks removable
+  render();
 });
 
 addTop.addEventListener("click", (e) => {
   e.preventDefault();
   addNewTask("top");
-  makeATaskRemovable(ulElement.firstChild);
+  render();
 });
 
 addBottom.addEventListener("click", (e) => {
   e.preventDefault();
   addNewTask("bottom");
-  makeATaskRemovable(ulElement.lastChild);
+  render();
 });
 
 populateTaskOwners();
-populateTask();
-makeTasksRemovable();
+checkSessionStorage();
+render();
+
+function checkSessionStorage() {
+  //store task data if not in sessionStorage
+  if (!JSON.parse(sessionStorage.getItem("tasks")))
+    sessionStorage.setItem("tasks", JSON.stringify(tasks));
+
+  //store owner task data if not in sessionStorage
+  if (!JSON.parse(sessionStorage.getItem("owner")))
+    sessionStorage.setItem("owner", JSON.stringify(people));
+}
+
+function render() {
+  populateTask();
+  makeTasksRemovable();
+}
