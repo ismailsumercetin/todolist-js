@@ -156,13 +156,19 @@ populateTaskOwners();
 render();
 
 function checkSessionStorage() {
-  //store task data if not in sessionStorage
-  if (!JSON.parse(sessionStorage.getItem("tasks")))
-    sessionStorage.setItem("tasks", JSON.stringify(tasks));
-
-  //store owner task data if not in sessionStorage
-  if (!JSON.parse(sessionStorage.getItem("owner")))
-    sessionStorage.setItem("owner", JSON.stringify(people));
+  let ownerStorage;
+  let tasksStorage;
+  try {
+    ownerStorage = JSON.parse(sessionStorage.getItem("owner"));
+    tasksStorage = JSON.parse(sessionStorage.getItem("tasks"));
+  } catch (error) {
+    //if storage data is distorted, inform the user
+    alert("Storage data not existing or distorted! Reloading default data...");
+  } finally {
+    //check if not existing or distorted. In both ways, fill the storage
+    if (!ownerStorage) sessionStorage.setItem("owner", JSON.stringify(people));
+    if (!tasksStorage) sessionStorage.setItem("tasks", JSON.stringify(tasks));
+  }
 }
 
 function render() {
