@@ -16,12 +16,12 @@ const tasks = [
 const selectedIndex = 1;
 
 //DOM elements
-const ulElement = document.getElementById("todoList");
-const todoOwnersSelectElement = document.getElementById("todoOwners");
-const addTop = document.getElementById("addToTop");
-const addBottom = document.getElementById("addToBottom");
-const titleElement = document.getElementById("todoOwnerName");
-const newTaskTextbox = document.getElementById("newTask");
+const ulElement = document.querySelector("#todoList");
+const todoOwnersSelectElement = document.querySelector("#todoOwners");
+const addTop = document.querySelector("#addToTop");
+const addBottom = document.querySelector("#addToBottom");
+const titleElement = document.querySelector("#todoOwnerName");
+const newTaskTextbox = document.querySelector("#newTask");
 let liElements;
 /*---------------------------------------------------------------*/
 
@@ -73,7 +73,11 @@ const populateTask = () => {
     ulElement.appendChild(listElement);
   });
   //get li elements for removal
-  liElements = document.getElementsByTagName("li");
+  liElements = document.querySelectorAll("li");
+  //HTMLCollection to array
+  [...liElements].forEach((liElement) => {
+    liElement.addEventListener("click", remove);
+  });
 };
 
 const addNewTask = (place) => {
@@ -121,39 +125,31 @@ const remove = function () {
 
   sessionStorage.setItem("tasks", JSON.stringify(taskData));
   //render tasks and make them removable
-  render();
-};
-
-//make all tasks removable
-const makeTasksRemovable = () => {
-  //HTMLCollection to array
-  [...liElements].forEach((liElement) => {
-    liElement.addEventListener("click", remove);
-  });
+  populateTask();
 };
 
 todoOwnersSelectElement.addEventListener("change", () => {
   //render title
   setSelectedOwnerName();
   //clear task list, render tasks and make all tasks removable
-  render();
+  populateTask();
 });
 
 addTop.addEventListener("click", (e) => {
   e.preventDefault();
   addNewTask("top");
-  render();
+  populateTask();
 });
 
 addBottom.addEventListener("click", (e) => {
   e.preventDefault();
   addNewTask("bottom");
-  render();
+  populateTask();
 });
 
 checkSessionStorage();
 populateTaskOwners();
-render();
+populateTask();
 
 function checkSessionStorage() {
   let ownerStorage;
@@ -169,9 +165,4 @@ function checkSessionStorage() {
     if (!ownerStorage) sessionStorage.setItem("owner", JSON.stringify(people));
     if (!tasksStorage) sessionStorage.setItem("tasks", JSON.stringify(tasks));
   }
-}
-
-function render() {
-  populateTask();
-  makeTasksRemovable();
 }
