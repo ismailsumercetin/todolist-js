@@ -32,10 +32,10 @@ const setSelectedOwnerName = () => {
 };
 
 const populateTaskOwners = () => {
-  let ownerData = JSON.parse(sessionStorage.getItem("owner"));
+  const ownerData = JSON.parse(sessionStorage.getItem("owner"));
 
   ownerData.forEach((person, index) => {
-    let option = document.createElement("option");
+    const option = document.createElement("option");
     option.value = person.id;
     option.text = person.name;
     if (index === selectedIndex) {
@@ -55,17 +55,19 @@ const populateTask = () => {
   ulElement.innerHTML = "";
 
   //get selected option, and filter tasks
-  let ownerId =
+  const ownerId =
     todoOwnersSelectElement.options[todoOwnersSelectElement.selectedIndex]
       .value;
   //get owner data form sessionStorage
-  let taskData = JSON.parse(sessionStorage.getItem("tasks"));
+  const taskData = JSON.parse(sessionStorage.getItem("tasks"));
   //filter tasks by owner id
-  let tasksOfOwner = taskData.filter((task) => task.owner === Number(ownerId));
+  const tasksOfOwner = taskData.filter(
+    (task) => task.owner === Number(ownerId)
+  );
 
   //create list elements and render tasks to DOM
   tasksOfOwner.forEach((task) => {
-    let listElement = document.createElement("li");
+    const listElement = document.createElement("li");
     listElement.textContent = task.text;
     listElement.setAttribute("taskId", task.id);
     ulElement.appendChild(listElement);
@@ -75,23 +77,23 @@ const populateTask = () => {
 };
 
 const addNewTask = (place) => {
-  let newTaskText = newTaskTextbox.value;
+  const newTaskText = newTaskTextbox.value;
 
   //if task input is empty, return null
   if (!newTaskText) return null;
 
   //get tasks from sessionStorage
-  let storedTasks = JSON.parse(sessionStorage.getItem("tasks"));
+  const storedTasks = JSON.parse(sessionStorage.getItem("tasks"));
 
   let maxTaskId = 0;
 
   if (storedTasks.length !== 0)
     maxTaskId = Math.max(...storedTasks.map((task) => task.id));
 
-  let newTaskId = ++maxTaskId;
+  const newTaskId = ++maxTaskId;
 
   //create object
-  let newTask = {};
+  const newTask = {};
   newTask.id = newTaskId;
   newTask.owner = Number(todoOwnersSelectElement.value);
   newTask.text = newTaskText;
@@ -109,9 +111,9 @@ const addNewTask = (place) => {
 };
 
 const remove = function () {
-  let taskData = JSON.parse(sessionStorage.getItem("tasks"));
+  const taskData = JSON.parse(sessionStorage.getItem("tasks"));
   //find task index and delete
-  var taskDeleted = taskData.findIndex((task) => {
+  const taskDeleted = taskData.findIndex((task) => {
     return task.id === Number(this.getAttribute("taskId"));
   });
 
@@ -149,8 +151,8 @@ addBottom.addEventListener("click", (e) => {
   render();
 });
 
-populateTaskOwners();
 checkSessionStorage();
+populateTaskOwners();
 render();
 
 function checkSessionStorage() {
