@@ -22,6 +22,14 @@ const addTop = document.querySelector("#addToTop");
 const addBottom = document.querySelector("#addToBottom");
 const titleElement = document.querySelector("#todoOwnerName");
 const newTaskTextbox = document.querySelector("#newTask");
+
+//constant strings
+const OWNER = "owner";
+const TASKS = "tasks";
+const BOTTOM = "bottom";
+const TOP = "top";
+const TASK_ID = "taskId";
+
 let liElements;
 /*---------------------------------------------------------------*/
 
@@ -59,7 +67,7 @@ const populateTask = () => {
     todoOwnersSelectElement.options[todoOwnersSelectElement.selectedIndex]
       .value;
   //get owner data form sessionStorage
-  const taskData = JSON.parse(sessionStorage.getItem("tasks"));
+  const taskData = JSON.parse(sessionStorage.getItem(TASKS));
   //filter tasks by owner id
   const tasksOfOwner = taskData.filter(
     (task) => task.owner === Number(ownerId)
@@ -69,7 +77,7 @@ const populateTask = () => {
   tasksOfOwner.forEach((task) => {
     const listElement = document.createElement("li");
     listElement.textContent = task.text;
-    listElement.setAttribute("taskId", task.id);
+    listElement.setAttribute(TASK_ID, task.id);
     ulElement.appendChild(listElement);
   });
   //get li elements for removal
@@ -87,7 +95,7 @@ const addNewTask = (place) => {
   if (!newTaskText) return null;
 
   //get tasks from sessionStorage
-  const storedTasks = JSON.parse(sessionStorage.getItem("tasks"));
+  const storedTasks = JSON.parse(sessionStorage.getItem(TASKS));
 
   let maxTaskId = 0;
 
@@ -102,28 +110,28 @@ const addNewTask = (place) => {
   newTask.owner = Number(todoOwnersSelectElement.value);
   newTask.text = newTaskText;
 
-  if (place === "top") {
+  if (place === TOP) {
     //add to the beginning of the array
     storedTasks.unshift(newTask);
-  } else if (place === "bottom") {
+  } else if (place === BOTTOM) {
     //add to the end of the array
     storedTasks.push(newTask);
   }
 
   //update tasks item in sessionStorage
-  sessionStorage.setItem("tasks", JSON.stringify(storedTasks));
+  sessionStorage.setItem(TASKS, JSON.stringify(storedTasks));
 };
 
 const remove = function () {
-  const taskData = JSON.parse(sessionStorage.getItem("tasks"));
+  const taskData = JSON.parse(sessionStorage.getItem(TASKS));
   //find task index and delete
   const taskDeleted = taskData.findIndex((task) => {
-    return task.id === Number(this.getAttribute("taskId"));
+    return task.id === Number(this.getAttribute(TASK_ID));
   });
 
   taskData.splice(taskDeleted, 1);
 
-  sessionStorage.setItem("tasks", JSON.stringify(taskData));
+  sessionStorage.setItem(TASKS, JSON.stringify(taskData));
   //render tasks and make them removable
   populateTask();
 };
@@ -137,13 +145,13 @@ todoOwnersSelectElement.addEventListener("change", () => {
 
 addTop.addEventListener("click", (e) => {
   e.preventDefault();
-  addNewTask("top");
+  addNewTask(TOP);
   populateTask();
 });
 
 addBottom.addEventListener("click", (e) => {
   e.preventDefault();
-  addNewTask("bottom");
+  addNewTask(BOTTOM);
   populateTask();
 });
 
@@ -155,14 +163,14 @@ function checkSessionStorage() {
   let ownerStorage;
   let tasksStorage;
   try {
-    ownerStorage = JSON.parse(sessionStorage.getItem("owner"));
-    tasksStorage = JSON.parse(sessionStorage.getItem("tasks"));
+    ownerStorage = JSON.parse(sessionStorage.getItem(OWNER));
+    tasksStorage = JSON.parse(sessionStorage.getItem(TASKS));
   } catch (error) {
     //if storage data is distorted, inform the user
     alert("Storage data not existing or distorted! Reloading default data...");
   } finally {
     //check if not existing or distorted. In both ways, fill the storage
-    if (!ownerStorage) sessionStorage.setItem("owner", JSON.stringify(people));
-    if (!tasksStorage) sessionStorage.setItem("tasks", JSON.stringify(tasks));
+    if (!ownerStorage) sessionStorage.setItem(OWNER, JSON.stringify(people));
+    if (!tasksStorage) sessionStorage.setItem(TASKS, JSON.stringify(tasks));
   }
 }
