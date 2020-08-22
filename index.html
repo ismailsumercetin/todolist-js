@@ -3,20 +3,27 @@
   <head>
     <title>Parcel Sandbox</title>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="src/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap" rel="stylesheet">
   </head>
 
   <body>
     <div id="app">
       <div>
-        <label for="todoOwners">TODO Owners</label>
-        <select id="todoOwners"></select>
-        <hr />
+        <div id="sectionTodoOwner">
+          <label id="labelTodo" for="todoOwners">TODO Owners:</label>
+          <select id="todoOwners"></select>
+        </div>
+        <br />
         <h1>TODO List of <span id="todoOwnerName"></span></h1>
-        <ul id="todoList"></ul>
         <hr />
+        <ul id="todoList"></ul>
+        
         <input type="text" id="newTask" placeholder="Add new task" />
-        <a href="" id="addToTop">To top</a>
-        <a href="" id="addToBottom">To bottom</a>
+        <div id="buttons">
+          <button id="addToTop">Add to top</button>
+          <button id="addToBottom">Add to bottom</button>
+        </div>
       </div>
     </div>
   </body>

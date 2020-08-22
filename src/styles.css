@@ -1,3 +1,86 @@
 body {
-  font-family: sans-serif;
+  font-family: 'Nunito', sans-serif;
+}
+
+#app {
+  text-align: center;
+}
+
+#sectionTodoOwner {
+  text-align: left;
+}
+
+hr {
+  margin: -15px auto 30px auto;
+  width: 80%;
+}
+
+ul {
+  display: table;
+  margin: 0 auto 20px auto;
+}
+
+#buttons {
+  margin-top: 15px;
+}
+
+
+
+input[type=text] {
+  
+  width: 5%;
+  padding: 12px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  -webkit-transition: 0.15s;
+  transition: 0.15s;
+}
+
+input[type=text]:hover {
+  border: 2px solid #555;
+}
+
+button {
+  width: 15%;
+  padding: 10px;
+  background-color: gray;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  color: white;
+  -webkit-transition: 0.15s;
+  transition: 0.15s;
+}
+
+button:hover {
+  background-color: #12c912;
+  outline: none;
+}
+
+li {
+  -webkit-transition: 0.15s;
+  transition: 0.30s;
+}
+
+li:hover {
+  font-size: large;
+  font-weight: bolder;
+}
+
+select {
+  border: 1px solid black;
+  outline: none;
+  padding: 5px;
+  border-radius: 4px;
+  -webkit-transition: 0.15s;
+  transition: 0.15s;
+}
+
+select:hover {
+  background-color:rgb(167, 222, 222);
+}
+
+#labelTodo {
+  margin-right: 5px;
 }

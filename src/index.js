@@ -1,4 +1,4 @@
-import "./styles.css";
+
 const people = [
   { id: 1, name: "Guillermo" },
   { id: 3, name: "Julia" },
@@ -72,8 +72,9 @@ const populateTask = () => {
   const tasksOfOwner = taskData.filter(
     (task) => task.owner === Number(ownerId)
   );
-
-  //create list elements and render tasks to DOM
+  
+  if (tasksOfOwner.length !== 0) {
+    //create list elements and render tasks to DOM
   tasksOfOwner.forEach((task) => {
     const listElement = document.createElement("li");
     listElement.textContent = task.text;
@@ -86,6 +87,10 @@ const populateTask = () => {
   [...liElements].forEach((liElement) => {
     liElement.addEventListener("click", remove);
   });
+  } else {
+    ulElement.innerHTML = "<h3>No Task</h3>"
+  }
+  
 };
 
 const addNewTask = (place) => {
