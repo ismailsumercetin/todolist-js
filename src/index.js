@@ -73,20 +73,36 @@ const populateTask = () => {
     (task) => task.owner === Number(ownerId)
   );
   
+  //check if there are any tasks to be rendered
   if (tasksOfOwner.length !== 0) {
     //create list elements and render tasks to DOM
-  tasksOfOwner.forEach((task) => {
-    const listElement = document.createElement("li");
-    listElement.textContent = task.text;
-    listElement.setAttribute(TASK_ID, task.id);
-    ulElement.appendChild(listElement);
-  });
-  //get li elements for removal
-  liElements = document.querySelectorAll("li");
-  //HTMLCollection to array
-  [...liElements].forEach((liElement) => {
-    liElement.addEventListener("click", remove);
-  });
+    tasksOfOwner.forEach((task) => {
+      const listElement = document.createElement("li");
+      listElement.textContent = task.text;
+      listElement.style = "margin: 15px"
+      ulElement.appendChild(listElement);
+
+      //create delete button for each task
+      const taskDeleteButton = document.createElement("button");
+      taskDeleteButton.setAttribute('id', 'deleteButton');
+      taskDeleteButton.setAttribute(TASK_ID, task.id);
+      taskDeleteButton.textContent = "X"
+      
+      //remove list element listener
+      taskDeleteButton.addEventListener("click", remove);
+
+      listElement.append(taskDeleteButton);
+      
+      /*
+      //create checkbox for each task
+      const taskCheckbox = document.createElement("input");
+      taskCheckbox.type = "checkbox"; 
+      taskCheckbox.value = task.id;
+      listElement.prepend(taskCheckbox);
+      */
+
+    });
+    
   } else {
     ulElement.innerHTML = "<h3>No Task</h3>"
   }
@@ -95,7 +111,7 @@ const populateTask = () => {
 
 const addNewTask = (place) => {
   const newTaskText = newTaskTextbox.value;
-
+  
   //if task input is empty, return null
   if (!newTaskText) return null;
 

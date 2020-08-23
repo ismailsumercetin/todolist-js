@@ -16,8 +16,9 @@ hr {
 }
 
 ul {
-  display: table;
+  
   margin: 0 auto 20px auto;
+  list-style-type: none;
 }
 
 #buttons {
@@ -28,7 +29,7 @@ ul {
 
 input[type=text] {
   
-  width: 5%;
+  width: 15%;
   padding: 12px;
   border: 2px solid #ccc;
   border-radius: 4px;
@@ -56,6 +57,7 @@ button {
 button:hover {
   background-color: #12c912;
   outline: none;
+  cursor: pointer;
 }
 
 li {
@@ -79,8 +81,24 @@ select {
 
 select:hover {
   background-color:rgb(167, 222, 222);
+  cursor: pointer;
 }
 
 #labelTodo {
   margin-right: 5px;
+}
+
+#deleteButton {
+  margin: auto auto auto 3%;
+  content: "X";
+  color: black;
+  background: none;
+  width: 3%;
+  size: 5px
+}
+
+#deleteButton:hover {
+  background-color: red;
+  border-radius: 20px;
+  color: white;
 }
