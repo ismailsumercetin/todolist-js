@@ -25,8 +25,6 @@ ul {
   margin-top: 15px;
 }
 
-
-
 input[type=text] {
   
   width: 15%;
@@ -40,6 +38,14 @@ input[type=text] {
 
 input[type=text]:hover {
   border: 2px solid #555;
+}
+
+input[type=checkbox] {
+  margin-right: 15px;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 
 button {
@@ -61,6 +67,7 @@ button:hover {
 }
 
 li {
+  margin: 8px;
   -webkit-transition: 0.15s;
   transition: 0.30s;
 }
@@ -89,16 +96,18 @@ select:hover {
 }
 
 #deleteButton {
-  margin: auto auto auto 3%;
+  margin: auto auto auto 1%;
   content: "X";
+  vertical-align: middle;
   color: black;
   background: none;
+  border-radius: 20px;
   width: 3%;
-  size: 5px
+  size: 5px;
+  
 }
 
 #deleteButton:hover {
   background-color: red;
-  border-radius: 20px;
   color: white;
 }

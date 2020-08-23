@@ -1,4 +1,3 @@
-
 const people = [
   { id: 1, name: "Guillermo" },
   { id: 3, name: "Julia" },
@@ -7,10 +6,10 @@ const people = [
 ];
 
 const tasks = [
-  { id: 1, owner: 1, text: "Take out the trash" },
-  { id: 2, owner: 2, text: "Walk the dog" },
-  { id: 3, owner: 3, text: "Wash the dishes" },
-  { id: 4, owner: 4, text: "Dust out the living room" }
+  { id: 1, owner: 1, text: "Take out the trash", completed: false },
+  { id: 2, owner: 2, text: "Walk the dog", completed: false },
+  { id: 3, owner: 3, text: "Wash the dishes", completed: false },
+  { id: 4, owner: 4, text: "Dust out the living room", completed: false }
 ];
 
 const selectedIndex = 1;
@@ -30,7 +29,6 @@ const BOTTOM = "bottom";
 const TOP = "top";
 const TASK_ID = "taskId";
 
-let liElements;
 /*---------------------------------------------------------------*/
 
 //render title
@@ -59,15 +57,17 @@ const populateTaskOwners = () => {
 };
 
 const populateTask = () => {
-  //clear task lisk
+  //clear task list
   ulElement.innerHTML = "";
+
+  //get task data from sessionStorage
+  const taskData = JSON.parse(sessionStorage.getItem(TASKS));
 
   //get selected option, and filter tasks
   const ownerId =
     todoOwnersSelectElement.options[todoOwnersSelectElement.selectedIndex]
       .value;
-  //get owner data form sessionStorage
-  const taskData = JSON.parse(sessionStorage.getItem(TASKS));
+
   //filter tasks by owner id
   const tasksOfOwner = taskData.filter(
     (task) => task.owner === Number(ownerId)
@@ -77,29 +77,35 @@ const populateTask = () => {
   if (tasksOfOwner.length !== 0) {
     //create list elements and render tasks to DOM
     tasksOfOwner.forEach((task) => {
+
       const listElement = document.createElement("li");
       listElement.textContent = task.text;
-      listElement.style = "margin: 15px"
+
+      if (task.completed)
+        listElement.style = "text-decoration: line-through;"
+      
       ulElement.appendChild(listElement);
+
+      //create checkbox for each task
+      const taskCheckbox = document.createElement("input");
+      taskCheckbox.type = "checkbox"; 
+      taskCheckbox.value = task.id;
+
+      if (task.completed)
+        taskCheckbox.checked = true;
+
+      listElement.prepend(taskCheckbox);
 
       //create delete button for each task
       const taskDeleteButton = document.createElement("button");
       taskDeleteButton.setAttribute('id', 'deleteButton');
       taskDeleteButton.setAttribute(TASK_ID, task.id);
       taskDeleteButton.textContent = "X"
-      
-      //remove list element listener
-      taskDeleteButton.addEventListener("click", remove);
-
       listElement.append(taskDeleteButton);
-      
-      /*
-      //create checkbox for each task
-      const taskCheckbox = document.createElement("input");
-      taskCheckbox.type = "checkbox"; 
-      taskCheckbox.value = task.id;
-      listElement.prepend(taskCheckbox);
-      */
+
+      //remove list element listener, complete task listener
+      taskCheckbox.addEventListener("change", completeTask);
+      taskDeleteButton.addEventListener("click", remove);
 
     });
     
@@ -117,7 +123,6 @@ const addNewTask = (place) => {
 
   //get tasks from sessionStorage
   const storedTasks = JSON.parse(sessionStorage.getItem(TASKS));
-
   let maxTaskId = 0;
 
   if (storedTasks.length !== 0)
@@ -130,6 +135,7 @@ const addNewTask = (place) => {
   newTask.id = newTaskId;
   newTask.owner = Number(todoOwnersSelectElement.value);
   newTask.text = newTaskText;
+  newTask.completed = false;
 
   if (place === TOP) {
     //add to the beginning of the array
@@ -139,8 +145,14 @@ const addNewTask = (place) => {
     storedTasks.push(newTask);
   }
 
+  //clear the text input
+  newTaskTextbox.value = '';
+
   //update tasks item in sessionStorage
   sessionStorage.setItem(TASKS, JSON.stringify(storedTasks));
+
+  //render tasks
+  populateTask();
 };
 
 const remove = function () {
@@ -157,23 +169,40 @@ const remove = function () {
   populateTask();
 };
 
+const completeTask = function () {
+
+  //find task and make completed:true
+  const taskData = JSON.parse(sessionStorage.getItem(TASKS));
+
+  const taskCompleted = taskData.find((task) => {
+    return task.id === Number(this.getAttribute('value'));
+  });
+
+  if (taskCompleted.completed)
+    taskCompleted.completed = false;
+  else
+    taskCompleted.completed = true;
+
+  sessionStorage.setItem(TASKS, JSON.stringify(taskData));
+
+  //render tasks
+  populateTask();
+};
+
 todoOwnersSelectElement.addEventListener("change", () => {
   //render title
   setSelectedOwnerName();
+
   //clear task list, render tasks and make all tasks removable
   populateTask();
 });
 
 addTop.addEventListener("click", (e) => {
-  e.preventDefault();
   addNewTask(TOP);
-  populateTask();
 });
 
 addBottom.addEventListener("click", (e) => {
-  e.preventDefault();
   addNewTask(BOTTOM);
-  populateTask();
 });
 
 checkSessionStorage();
