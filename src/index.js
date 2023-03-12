@@ -72,52 +72,49 @@ const populateTask = () => {
   const tasksOfOwner = taskData.filter(
     (task) => task.owner === Number(ownerId)
   );
-  
+
   //check if there are any tasks to be rendered
   if (tasksOfOwner.length !== 0) {
     //create list elements and render tasks to DOM
     tasksOfOwner.forEach((task) => {
-
       const listElement = document.createElement("li");
-      listElement.textContent = task.text;
+      const textElement = document.createElement("p");
+      textElement.textContent = task.text;
 
-      if (task.completed)
-        listElement.style = "text-decoration: line-through;"
-      
+      if (task.completed) listElement.style = "text-decoration: line-through;";
+
+      textElement.setAttribute("class", "text-todo");
+      listElement.appendChild(textElement);
       ulElement.appendChild(listElement);
 
       //create checkbox for each task
       const taskCheckbox = document.createElement("input");
-      taskCheckbox.type = "checkbox"; 
+      taskCheckbox.type = "checkbox";
       taskCheckbox.value = task.id;
 
-      if (task.completed)
-        taskCheckbox.checked = true;
+      if (task.completed) taskCheckbox.checked = true;
 
       listElement.prepend(taskCheckbox);
 
       //create delete button for each task
       const taskDeleteButton = document.createElement("button");
-      taskDeleteButton.setAttribute('id', 'deleteButton');
+      taskDeleteButton.setAttribute("id", "deleteButton");
       taskDeleteButton.setAttribute(TASK_ID, task.id);
-      taskDeleteButton.textContent = "X"
+      taskDeleteButton.textContent = "X";
       listElement.append(taskDeleteButton);
 
       //remove list element listener, complete task listener
       taskCheckbox.addEventListener("change", completeTask);
       taskDeleteButton.addEventListener("click", remove);
-
     });
-    
   } else {
-    ulElement.innerHTML = "<h3>No Task</h3>"
+    ulElement.innerHTML = "<h3>No Task</h3>";
   }
-  
 };
 
 const addNewTask = (place) => {
   const newTaskText = newTaskTextbox.value;
-  
+
   //if task input is empty, return null
   if (!newTaskText) return null;
 
@@ -146,7 +143,7 @@ const addNewTask = (place) => {
   }
 
   //clear the text input
-  newTaskTextbox.value = '';
+  newTaskTextbox.value = "";
 
   //update tasks item in sessionStorage
   sessionStorage.setItem(TASKS, JSON.stringify(storedTasks));
@@ -170,18 +167,15 @@ const remove = function () {
 };
 
 const completeTask = function () {
-
   //find task and make completed:true
   const taskData = JSON.parse(sessionStorage.getItem(TASKS));
 
   const taskCompleted = taskData.find((task) => {
-    return task.id === Number(this.getAttribute('value'));
+    return task.id === Number(this.getAttribute("value"));
   });
 
-  if (taskCompleted.completed)
-    taskCompleted.completed = false;
-  else
-    taskCompleted.completed = true;
+  if (taskCompleted.completed) taskCompleted.completed = false;
+  else taskCompleted.completed = true;
 
   sessionStorage.setItem(TASKS, JSON.stringify(taskData));
 

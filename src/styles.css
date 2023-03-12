@@ -1,5 +1,5 @@
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
 }
 
 #app {
@@ -8,6 +8,15 @@ body {
 
 #sectionTodoOwner {
   text-align: left;
+}
+
+#todoList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 50%;
 }
 
 hr {
@@ -25,8 +34,7 @@ ul {
   margin-top: 15px;
 }
 
-input[type=text] {
-  
+input[type="text"] {
   width: 15%;
   padding: 12px;
   border: 2px solid #ccc;
@@ -36,13 +44,11 @@ input[type=text] {
   transition: 0.15s;
 }
 
-input[type=text]:hover {
+input[type="text"]:hover {
   border: 2px solid #555;
 }
 
-input[type=checkbox] {
-  margin-right: 15px;
-  vertical-align: middle;
+input[type="checkbox"] {
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -69,7 +75,7 @@ button:hover {
 li {
   margin: 8px;
   -webkit-transition: 0.15s;
-  transition: 0.30s;
+  transition: 0.3s;
 }
 
 li:hover {
@@ -87,7 +93,7 @@ select {
 }
 
 select:hover {
-  background-color:rgb(167, 222, 222);
+  background-color: rgb(167, 222, 222);
   cursor: pointer;
 }
 
@@ -96,18 +102,18 @@ select:hover {
 }
 
 #deleteButton {
-  margin: auto auto auto 1%;
-  content: "X";
-  vertical-align: middle;
-  color: black;
-  background: none;
-  border-radius: 20px;
-  width: 3%;
-  size: 5px;
-  
+  background-color: #fff;
+  color: #000;
+  max-width: 48px;
 }
 
 #deleteButton:hover {
   background-color: red;
   color: white;
+}
+
+.text-todo {
+  word-break: break-word;
+  max-width: 60%;
+  text-align: left;
 }
